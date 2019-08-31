@@ -1,0 +1,68 @@
+#logo {
+	color: rgb(255,213,0);
+}
+
+.bg-inverse {
+	background-color: #292b2c !important;
+}
+
+.navbar {
+	width: 100%;
+}
+
+.twitter-typeahead > .form-control{
+	border-top-left-radius: 0px !important;
+	border-bottom-left-radius: 0px !important;
+}
+
+span.twitter-typeahead {
+    width: auto !important;
+}
+
+@supports not (clip-path: circle(20px at 50% 40%)){
+	#userimage {
+		display: none;
+	}
+}
+#userimage {
+	margin-top: -10px;
+	margin-bottom: -20px;
+	clip-path: circle(20px at 50% 40%);
+	width:40px;
+}
+
+.result-card {
+	min-height: 250px;
+}
+
+.fw-label {
+	width: 180px;
+	float: left;
+	font-weight: bold;
+}
+
+.wide{
+	margin-top: .4em;
+}
+
+.btn-group-toggle input:checked+span:before{
+	font-family: "Font Awesome 5 Free";
+  content: "\f00c";
+  font-weight: 900;
+}
+.btn-group-toggle input:not(:checked)+span:before{
+	font-family: "Font Awesome 5 Free";
+  content: "\f05e";
+	font-weight: 900;
+}
+
+.blink {
+	color: #32CD32;
+  animation: blinker 3s linear infinite;
+}
+
+@keyframes blinker {
+  50% {
+    opacity: 0.1;
+  }
+}

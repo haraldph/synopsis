@@ -1,31 +1,32 @@
 <?php
 require("functions.php");
-if(!isset($_SESSION["synopsis"])){
+
+if(!isset($_SESSION["synopsis"]))
+{
 	$redirect = "https://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-  header("location: /login.php?redirect=$redirect");
-  die();
+    header("location: /login.php?redirect=$redirect");
+    die();
 }
 else{
-$basicuser = $poweruser = $adminuser = $delegation = false;
-  if ($_SESSION["synopsis"]['userlevel'] >= 1){
-    $basicuser = true;
-    if ($_SESSION["synopsis"]['delegation'] == 1)
-        $delegation = $_SESSION["synopsis"]['delegation'];
-    if ($_SESSION["synopsis"]['userlevel'] >= 5)
-      $poweruser = true;
-    if ($_SESSION["synopsis"]['userlevel'] == 9)
-      $adminuser = true;
-  }else{
-    header("location: forbidden.php");
-    die();
-  }
-  if(getOtpStatus($_SESSION["synopsis"]['username']) == "1"){
-    if ($_SESSION["synopsis"]["otp"] == "false"){
-      header("location: otp-login.php");
-      die();
+    $basicuser = $poweruser = $adminuser = $delegation = false;
+    if ($_SESSION["synopsis"]['userlevel'] >= 1){
+        $basicuser = true;
+        if ($_SESSION["synopsis"]['delegation'] == 1)
+            $delegation = $_SESSION["synopsis"]['delegation'];
+        if ($_SESSION["synopsis"]['userlevel'] >= 5)
+            $poweruser = true;
+        if ($_SESSION["synopsis"]['userlevel'] == 9)
+            $adminuser = true;
+    }else{
+        header("location: forbidden.php");
+        die();
     }
-  }
-
+    if(getOtpStatus($_SESSION["synopsis"]['username']) == "1"){
+        if ($_SESSION["synopsis"]["otp"] == "false"){
+            header("location: otp-login.php");
+            die();
+        }
+    }
 }
 
 ?>

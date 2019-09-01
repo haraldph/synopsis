@@ -2,7 +2,10 @@
 include("functions.php");
 
 function login($username, $password) {
-	$username = strtolower($username);
+	/**
+     * Connect to domain controller LDAP server
+     */
+    $username = strtolower($username);
 	if(!preg_match('/^[a-z0-9_]+$/',  $username)){
 		exit;
 	}

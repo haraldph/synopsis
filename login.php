@@ -30,6 +30,7 @@ if(isset($_GET['redirect'])){
 
 </head>
 
+
 <body>
     <div class="navbar navbar-inverse bg-inverse">
         <!--	<div class="container d-flex justify-content-between"> -->

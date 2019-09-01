@@ -1,5 +1,5 @@
 <?php
-    require("header.inc.php");
+require("header.inc.php");
 ?>
 
 <div class="col-md-10 float-left col px-5 pl-md-4 pt-3 main">
@@ -164,8 +164,8 @@
 												<input type="hidden" name="type" value="desktop" />
 												<label for="assettag1" class="wide">Tyverinummer</label>
 												<input class="form-control" required name="assettag" id="assettag1" type="tel" <?php if ($_SESSION["synopsis"]['userlevel'] < 9) {
-																																	echo "readonly='readonly'";
-																																} ?> />
+                                                                                                                                         echo "readonly='readonly'";
+                                                                                                                                     } ?> />
 											</div>
 											<div class="col">
 												<label for="mac-address" class="wide">MAC-adresse</label> <a id="nav-mac-link-desktop" href="https://nav.oslomet.no/machinetracker/mac" target="blank"> Søk i NAV <i class="fas fa-sm fa-external-link-alt"></i></a>
@@ -206,8 +206,8 @@
 											<div class="col">
 												<label for="assettag" class="wide">Tyverinummer</label>
 												<input class="form-control" required name="assettag" type="tel" <?php if ($_SESSION["synopsis"]['userlevel'] < 9) {
-																													echo "readonly='readonly'";
-																												} ?> />
+                                                                                                                          echo "readonly='readonly'";
+                                                                                                                      } ?> />
 											</div>
 											<div class="col">
 												<label for="mac-address" class="wide">MAC-adresse</label> <a id="nav-mac-link-laptop" href="https://nav.hioa.no/machinetracker/mac" target="blank"> Søk i NAV <i class="fas fa-sm fa-external-link-alt"></i></a>
@@ -445,8 +445,8 @@
 		</div> <!-- End modal -->
 
 		<?php 
-            getLocations("buildings");
-		    getLocations("rooms");
+        getLocations("buildings");
+        getLocations("rooms");
         ?>
 
 		<script>
@@ -469,5 +469,5 @@
 		</script>
 		
         <?php 
-            require("footer.inc.php");
+        require("footer.inc.php");
         ?>

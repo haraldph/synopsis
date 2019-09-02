@@ -2,31 +2,36 @@
 include("functions.php");
 
 function login($username, $password) {
-	/**
-     * Connect to domain controller LDAP server
-     */
+
+    $authenticated = FALSE;
+	$userexists = FALSE;
+
     $username = strtolower($username);
 	if(!preg_match('/^[a-z0-9_]+$/',  $username)){
 		exit;
 	}
+    /**
+     * Connect to domain controller LDAP server
+     */
     $server = "ldaps://dc-2.ada.hioa.no ldaps://dc-1.ada.hioa.no ldaps://dc-3.ada.hioa.no";
-	$authres = FALSE;
-	$userexists = FALSE;
-    if (!($ldap = @ldap_connect($server))) {
-        return $authres;
+    $ldap = @ldap_connect($server);
+    if (!$ldap) {
+        return $authenticated;
 	}
     if (!@ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3)) {
         @ldap_unbind($ldap);
-        return $authres;
+        return $authenticated;
     }
-	
+
     /**
-     * Connect to local SYNOPSIS database and retrieve user information 
+     * Connect to local SYNOPSIS database and check if user exist in SYNOPSIS's own user database. If user
+     * exist retrieve $userlevel, $delegation, $approval. If not in SYNOPSIS's database check if user is member
+     * of di-ikt-f. Set $userlevel, $delegation and @approval accordingly.
      */
     $dblink = connectToSysDb();
 	$username = mysqli_real_escape_string($dblink,$username);
     $query = mysqli_query($dblink,"SELECT userlevel,delegation,approval FROM synopsis_users WHERE username = '$username'") or returnError(mysqli_error($dblink));
-    if (mysqli_num_rows($query) == 1) {
+    if (mysqli_num_rows($query) == 1) { // User in SYNOPSIS database
 		$userexists = TRUE;
         $row = mysqli_fetch_array($query);
         $userlevel = $row['userlevel'];
@@ -34,10 +39,11 @@ function login($username, $password) {
 		$approval = $row['approval'];
 		$filter = "(&(objectClass=user)(sAMAccountName=$username))";
     }
-    else {
-		$filter = "(&(objectClass=user)(sAMAccountName=$username)(memberof=CN=di-ikt-f,OU=File,OU=Groups,OU=Employees,OU=Managed,OU=HiOA,DC=ada,DC=hioa,DC=no))";
-		$delegation = $approval = 0;
+    else { // Set filter to check if user is member of di-ikt-f
         $userlevel = 1;
+		$delegation = 0;
+        $approval = 0;
+        $filter = "(&(objectClass=user)(sAMAccountName=$username)(memberof=CN=di-ikt-f,OU=File,OU=Groups,OU=Employees,OU=Managed,OU=HiOA,DC=ada,DC=hioa,DC=no))";
     }
 	mysqli_free_result($query);
 	mysqli_close($dblink);
@@ -49,19 +55,18 @@ function login($username, $password) {
 		$dn = 'ou=System Accounts,ou=Unmanaged,ou=HiOA,dc=ada,dc=hioa,dc=no';
 	}
 
-    if ($res = ldap_bind($ldap, $ldapuser, $password)) {
-
-        $authres = TRUE;
+    if (ldap_bind($ldap, $ldapuser, $password)) {
+        $authenticated = TRUE;
 		$attributes = array("givenName","sn","memberof","samaccountname","thumbnailPhoto");
         $userres = ldap_search($ldap, $dn, $filter, $attributes);
         $userobject = ldap_get_entries($ldap, $userres);
 		if (!isset($userobject[0]["sn"][0]) ){
-			$authres = FALSE;
+			$authenticated = FALSE;
 		}
 	}
 
     @ldap_unbind($ldap);
-    if ( !$authres ) {
+    if ( !$authenticated ) {
         @sleep(5);
 		logEvent(LOG_NOTICE,"LOGIN_DENIED: Failed login for user '$username' because of wrong username or password" .ldap_error($ldap));
 		if(isset($_POST['logintype'])){

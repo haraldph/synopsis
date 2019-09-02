@@ -24,8 +24,8 @@ function login($username, $password) {
     }
 
     /**
-     * Connect to local SYNOPSIS database and check if user exist in SYNOPSIS's own user database. If user
-     * exist retrieve $userlevel, $delegation, $approval. If not in SYNOPSIS's database check if user is member
+     * Connect to local SYNOPSIS database and check if user exist in SYNOPSIS user database. If user
+     * exist retrieve $userlevel, $delegation, $approval. If user not in SYNOPSIS database check if user is member
      * of di-ikt-f. Set $userlevel, $delegation and @approval accordingly.
      */
     $dblink = connectToSysDb();

@@ -44,9 +44,8 @@ function login($username, $password) {
 	mysqli_free_result($query);
 	mysqli_close($dblink);
 
-
-    if ($res = ldap_bind($ldap, $ldapuser, $password)) {
-
+    $ldapconn = ldap_bind($ldap, $ldapuser, $password);
+    if ($ldapconn) {
         $authres = TRUE;
 		$attributes = array("givenName","sn","memberof","samaccountname","thumbnailPhoto");
         $userres = ldap_search($ldap, $dn, $filter, $attributes);

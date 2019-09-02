@@ -19,13 +19,11 @@ function login($username, $password) {
         @ldap_unbind($ldap);
         return $authres;
     }
-	$ldapuser = $username . "@oslomet.no";
-	if(strpos($username, 'synopsis_api') === false){
-        $dn = 'ou=Active Employees,ou=Employees,ou=Managed,ou=HiOA,dc=ada,dc=hioa,dc=no';
-	}else{
-		$dn = 'ou=System Accounts,ou=Unmanaged,ou=HiOA,dc=ada,dc=hioa,dc=no';
-	}
-	$dblink = connectToSysDb();
+	
+    /**
+     * Connect to local SYNOPSIS database and retrieve user information 
+     */
+    $dblink = connectToSysDb();
 	$username = mysqli_real_escape_string($dblink,$username);
     $query = mysqli_query($dblink,"SELECT userlevel,delegation,approval FROM synopsis_users WHERE username = '$username'") or returnError(mysqli_error($dblink));
     if (mysqli_num_rows($query) == 1) {
@@ -44,8 +42,15 @@ function login($username, $password) {
 	mysqli_free_result($query);
 	mysqli_close($dblink);
 
-    $ldapconn = ldap_bind($ldap, $ldapuser, $password);
-    if ($ldapconn) {
+	$ldapuser = $username . "@oslomet.no";
+	if(strpos($username, 'synopsis_api') === false){
+        $dn = 'ou=Active Employees,ou=Employees,ou=Managed,ou=HiOA,dc=ada,dc=hioa,dc=no';
+	}else{
+		$dn = 'ou=System Accounts,ou=Unmanaged,ou=HiOA,dc=ada,dc=hioa,dc=no';
+	}
+
+    if ($res = ldap_bind($ldap, $ldapuser, $password)) {
+
         $authres = TRUE;
 		$attributes = array("givenName","sn","memberof","samaccountname","thumbnailPhoto");
         $userres = ldap_search($ldap, $dn, $filter, $attributes);

@@ -53,7 +53,7 @@ function login($username, $password) {
 	}
 
     /**
-     * Get user information from AD and populate $userInfo. Flag user as authenticated.
+     * Get user information from AD and populate $userInfo. Flag user as authenticated if successful.
      */
     $authenticated = FALSE;
 	$ldapUser = $username . "@oslomet.no";
@@ -121,7 +121,7 @@ function login($username, $password) {
         @sleep(5);
 		logEvent(LOG_NOTICE,"LOGIN_DENIED: Failed login for user '$username' because of wrong username or password" .ldap_error($ldapConn));
 		if(isset($_POST['logintype'])) {
-            if($_POST['logintype'] == 'REST') {
+            if($_POST['logintype'] == 'REST') { // RESTRICTED
                 header('HTTP/1.1 401 '.  "Wrong username or password", true);
                 die;
 			}

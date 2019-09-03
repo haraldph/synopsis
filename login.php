@@ -1,9 +1,9 @@
 <?php
 session_start();
-if(isset($_GET['logout'])){
+if(isset($_GET['logout'])) {
 	session_destroy();
 }
-if(isset($_GET['redirect'])){
+if(isset($_GET['redirect'])) {
     $redirect = $_GET['redirect'];
 }else{
 	$redirect = "";

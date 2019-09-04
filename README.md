@@ -1,2 +1,0 @@
-# synopsis
-synopsis webapp
